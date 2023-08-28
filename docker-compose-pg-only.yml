@@ -1,0 +1,14 @@
+version: '0.1'
+services:
+  db:
+    image: postgres:13.4
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=kia
+    ports:
+      - '5433:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local
