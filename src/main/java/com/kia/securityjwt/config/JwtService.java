@@ -3,6 +3,7 @@ package com.kia.securityjwt.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +17,7 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    final String SECRET_KEY = "e80a6063280942629fa39f49f01de5f60756fe3bc87ec51e8b67c2e468b72189";
+    final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
     public String extractUsername(String token){
         return extractClaim(token,Claims::getSubject);
     }
@@ -32,16 +33,17 @@ public class JwtService {
                 .getBody();
 
     }
-    public String genrateToken(Map<String , Object> extraClaim, UserDetails userDetails){
+    public String generateToken(Map<String , Object> extraClaim, UserDetails userDetails){
         return Jwts.builder()
                 .setClaims(extraClaim)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000* 60* 24))
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-    public String genrateToken(UserDetails userDetails){
-        return genrateToken(new HashMap<>() , userDetails);
+    public String generateToken(UserDetails userDetails){
+        return generateToken(new HashMap<>() , userDetails);
     }
 
     private Key getSignInKey() {
